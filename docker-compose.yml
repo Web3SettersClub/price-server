@@ -1,0 +1,42 @@
+version: "3"
+
+services:
+  server:
+    container_name: price-server
+    privileged: true
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "1000:1000"
+      - "1001:1001"
+      - "1002:1002"
+    restart: always
+    environment:
+      NODE_ENV: production
+    networks:
+      - network
+    depends_on:
+      - redis
+      - mongo
+  
+  redis:
+    image: redis
+    container_name: price-redis
+    restart: always
+    networks:
+      - network
+    expose:
+      - "6379"
+  
+  mongo:
+    image: mongo
+    container_name: price-mongo
+    restart: always
+    networks:
+      - network
+    expose:
+      - "27017"
+networks:
+  network:
+    driver: bridge

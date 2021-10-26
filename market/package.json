@@ -1,0 +1,7 @@
+{
+  "name": "market",
+  "version": "1.0.0",
+  "description": "write price into db from market",
+  "main": "index.js",
+  "license": "MIT"
+}

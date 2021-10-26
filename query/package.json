@@ -1,0 +1,7 @@
+{
+  "name": "query",
+  "version": "1.0.0",
+  "description": "query price from db with params chain or market",
+  "main": "index.js",
+  "license": "MIT"
+}

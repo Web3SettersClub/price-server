@@ -1,0 +1,7 @@
+{
+  "name": "chain",
+  "version": "1.0.0",
+  "description": "write price into db from chain",
+  "main": "index.js",
+  "license": "MIT"
+}
