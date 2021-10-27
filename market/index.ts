@@ -1,5 +1,5 @@
 import { Server } from "..";
-import { MARKET_PORT, ALLOW_TOKENS, CMC_API_URL, QUERY_INTERVAL, TOKENS_MAP, TTokens, writePrice } from '../utils';
+import { MARKET_PORT, ALLOW_TOKENS, CMC_API_URL, QUERY_INTERVAL, TOKENS_MAP, TTokens, writePrice, postEvent } from '../utils';
 import { marketRoutes } from './routes';
 import axios from 'axios-https-proxy-fix';
 
@@ -63,10 +63,16 @@ const fetch = async (tokens: TTokens[]) => {
         fetch(tokens);
       }, 1000);
     }
-    console.log(res.data)
-    Object.keys(data).forEach(token => {
+    Object.keys(data).forEach(async token => {
       const priceData = data[token];
-      writePrice(server.getRedisClient(), priceData.symbol, 'market', priceData.quote.USD.price, priceData.quote.USD.last_updated);
+      if(priceData.quote.USD.price === 0) {
+        await postEvent({
+          title: 'cmc chain',
+          text: `%%% \n ### chain price get 0 \n - time: ${new Date().getTime()} \n - query data: ${JSON.stringify(priceData)} \n %%%`
+        })
+      } else {
+        await writePrice(server.getRedisClient(), priceData.symbol, 'market', priceData.quote.USD.price, priceData.quote.USD.last_updated);
+      }
     })
   } else {
     return setTimeout(() => {

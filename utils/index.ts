@@ -24,19 +24,23 @@ export const generateRedisKey = (from: TFrom, token: string, time: Date | string
   return `${from}:${token}:${_date}`
 };
 
+export const generateLogData = (req: FastifyRequest, res: FastifyReply) => {
+  return {
+    method: req.method,
+    url: req.url,
+    ip: req.ip,
+    query: req.query,
+    body: req.body,
+    headers: req.headers,
+    res: res.statusCode
+  }
+}
+
 // request info write to log file
 export const logger = (name: string, request: FastifyRequest, res: FastifyReply) => {
   const fileName = `${name}-${new Date().getMonth() + 1}-${new Date().getDate()}`;
   const logfile = path.resolve(__dirname, '..', 'logs', fileName);
-  const logData = {
-    method: request.method,
-    url: request.url,
-    ip: request.ip,
-    query: request.query,
-    body: request.body,
-    headers: request.headers,
-    res: res.statusCode
-  };
+  const logData = generateLogData(request, res);
   console.log(JSON.stringify(logData));
   fs.appendFile(logfile, `${JSON.stringify(logData)}\n`, () => {
     request.log.info(logData);

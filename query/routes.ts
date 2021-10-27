@@ -1,4 +1,5 @@
 import { RouteOptions } from 'fastify';
+import { generateLogData, postEvent } from '../utils';
 import { queryInAroundTime, queryLastest } from './hander';
 
 interface queryProps {
@@ -23,6 +24,11 @@ export const queryRoutes: RouteOptions[] = [
         const data = await queryLastest(from, token);
         const [error, price] = data;
         if (error != null) {
+          await postEvent({
+            text: JSON.stringify(generateLogData(req, res)),
+            title: 'query lastest error',
+            alertType: 'warning'
+          });
           return res.send({
             code: 0,
             data: {
