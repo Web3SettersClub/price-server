@@ -54,7 +54,7 @@ export const checkThreshold = async (request: FastifyRequest, redisClient: Redis
 
   const redisKey = `${path}:${method}:${ip}`;
   const times = await redisClient.keys(`${redisKey}*`);
-  if (times.length > 10) {
+  if (times.length > 60) {
     return false;
   } else {
     await redisClient.set(`${redisKey}:${new Date().getTime()}`, new Date().getTime().toString(), 'EX', 60);
