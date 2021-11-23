@@ -21,13 +21,13 @@ export const queryRoutes: RouteOptions[] = [
     handler: async (req, res) => {
       const { token, from, times } = req.query as queryProps;
       if(!ALLOW_TOKENS.includes(token.toUpperCase())) {
-        return res.send({
+        return {
           code: 0,
           data: {
             price: [0],
             message: 'Unsupported token'
           }
-        })
+        };
       }
       if (!times || times.length == 0) {
         const data = await queryLastest(from, token.toUpperCase());
@@ -38,31 +38,31 @@ export const queryRoutes: RouteOptions[] = [
             title: 'query lastest error',
             alertType: 'warning'
           });
-          return res.send({
+          return {
             code: 0,
             data: {
               price: [0],
               message: error
             }
-          })
+          }
         } else {
-          return res.send({
+          return {
             code: 1,
             data: {
               price: [price],
               message: '',
             }
-          })
+          }
         };
       } else {
         const pirces = await Promise.all(times.map(time => queryInAroundTime(from, token.toUpperCase(), time)));
-        return res.send({
+        return {
           code: 1,
           data: {
             price: pirces,
             messgae: '',
           }
-        })
+        }
       }
     }
   }

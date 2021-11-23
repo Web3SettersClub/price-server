@@ -3,7 +3,7 @@ import moment from "moment";
 import { generateRedisKey, TFrom } from "../utils";
 import { server } from './index';
 
-export const queryLastest = async (from: TFrom, token: string) => {
+export const queryLastest = async (from: TFrom = 'market', token: string) => {
   const redisKey = generateRedisKey(from, token, 'lastest');
   const redisClient = server.getRedisClient();
   try {
@@ -32,7 +32,7 @@ const getAroundTimes = (time: string | Date) => {
   return [startDate.toDate(), endDate.toDate()];
 }
 
-export const queryInAroundTime = async (from: TFrom, token: string, time: string | Date) => {
+export const queryInAroundTime = async (from: TFrom = 'market', token: string, time: string | Date) => {
   const [startTime, endTime] = getAroundTimes(time);
   try {
     const data = await priceModal.findOne({ from: from, token: token, createTime : { "$gte" : startTime, "$lte" : endTime } });
