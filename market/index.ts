@@ -39,7 +39,7 @@ interface CMC {
   }
 }
 
-const fetch = async (tokens: TTokens[]) => {
+const fetch = async (tokens: (TTokens | string)[]) => {
   const cmc_api_key = process.env.CMC_API_KEY;
   if(!cmc_api_key) {
     console.log("cmc_api_key is null");
