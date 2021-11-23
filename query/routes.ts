@@ -1,5 +1,5 @@
 import { RouteOptions } from 'fastify';
-import { generateLogData, postEvent } from '../utils';
+import { ALLOW_TOKENS, generateLogData, postEvent } from '../utils';
 import { queryInAroundTime, queryLastest } from './hander';
 
 interface queryProps {
@@ -20,8 +20,17 @@ export const queryRoutes: RouteOptions[] = [
     },
     handler: async (req, res) => {
       const { token, from, times } = req.query as queryProps;
+      if(!ALLOW_TOKENS.includes(token.toUpperCase())) {
+        return res.send({
+          code: 0,
+          data: {
+            price: [0],
+            message: 'Unsupported token'
+          }
+        })
+      }
       if (!times || times.length == 0) {
-        const data = await queryLastest(from, token);
+        const data = await queryLastest(from, token.toUpperCase());
         const [error, price] = data;
         if (error != null) {
           await postEvent({
@@ -46,7 +55,7 @@ export const queryRoutes: RouteOptions[] = [
           })
         };
       } else {
-        const pirces = await Promise.all(times.map(time => queryInAroundTime(from, token, time)));
+        const pirces = await Promise.all(times.map(time => queryInAroundTime(from, token.toUpperCase(), time)));
         return res.send({
           code: 1,
           data: {
