@@ -11,13 +11,13 @@ export const REDIS_PORT = 6379;
 // allowed price source;
 export type TFrom = 'market' | 'chain';
 // allowed token types
-export type TTokens = 'KAR'| 'KSM'| 'BNC';
-export const ALLOW_TOKENS: TTokens[] = ['KAR', 'KSM', 'BNC'];
+export type TTokens = 'SETM'| 'SERP'| 'DNAR';
+export const ALLOW_TOKENS: TTokens[] = ['SETM', 'SERP', 'DNAR'];
 // token to token_id map
 export const TOKENS_MAP: {[k in TTokens]: number} = {
-  KAR: 5034,
-  KSM: 10042,
-  BNC: 3222
+  SETM: 5034,
+  SERP: 10042,
+  DNAR: 3222
 }
 // cmc request url
 export const CMC_API_URL = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest";
